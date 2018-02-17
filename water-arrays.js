@@ -1,3 +1,5 @@
+//to be run on http://alpha.editor.p5js.org/
+
 var x = 230;
 var y = 220;
 var dropX = [];
