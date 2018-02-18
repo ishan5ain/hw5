@@ -1,8 +1,11 @@
 //run this on http://alpha.editor.p5js.org/
 // y-axis controls density of smoke
+// x-axis map the direction of wind
 
 var numSqr = 500;
 var squares = [];
+var windLeft = -0.1;
+var windRight = 0.1;
 
 function setup() {
   createCanvas(400, 400);
@@ -19,7 +22,7 @@ function setup() {
       size: 20,
       fade: 255,
       ySpeed: random(0.2, 2),
-      xSpeed: random(-0.1, 0.1),
+      xSpeed: random(windLeft, windRight),
       // c: color(0, 0, 100, 0.5),
       r: 1,
       rSpeed: random(1, 2),
@@ -39,6 +42,9 @@ function setup() {
       move: function() {
         this.tY = this.tY - this.ySpeed;
         this.tX = this.tX + this.xSpeed;
+      },
+      setWind: function(left, right) {
+        this.xSpeed = random(left, right);
       }
     };
   }
@@ -47,11 +53,7 @@ function setup() {
 function draw() {
   background(0);
   noStroke();
-  print(mouseY);
-
-  if (mouseY > height) {
-    numSqr = 500;
-  }
+  // print(mouseY);
 
   fill(255);
   rect(195, height, 30, -100);
@@ -59,6 +61,7 @@ function draw() {
   for (var i = 0; i < numSqr; i++) {
     squares[i].draw();
     squares[i].move();
+    squares[i].setWind(windLeft, windRight);
 
     if (squares[i].tY < 0) {
       squares[i].tY = 290;
@@ -69,5 +72,23 @@ function draw() {
 }
 
 function mouseMoved() {
-  numSqr = map(mouseY, height, 0, 50, 500);
+  if (mouseY <= height) {
+    numSqr = map(mouseY, height, 0, 50, 500);
+    print(numSqr);
+  } else {
+    numSqr = 50;
+  }
+
+  if (mouseX > 0 && mouseX <= width / 2) {
+    windLeft = map(mouseX, 0, width / 2, -1, -0.1);
+    // print(windLeft);
+  } else {
+    windLeft = -0.1;
+  }
+  if (mouseX > width / 2 && mouseX <= width) {
+    windRight = map(mouseX, width / 2, width, 0.1, 1);
+  } else {
+    windRight = 0.1;
+  }
+
 }
